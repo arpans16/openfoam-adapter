@@ -45,6 +45,10 @@ void preciceAdapter::CouplingDataUser::checkDataLocation(const bool meshConnecti
             location = "faceCenters";
         else if (locationType_ == LocationType::faceNodes)
             location = "faceNodes";
+        else if (locationType_ == LocationType::cellCenters)
+            location = "cellCenters";
+        else if (locationType_ == LocationType::cellFaceCenters)
+            location = "cellFaceCenters";
 
         adapterInfo("\"locations = " + location + "\" is not supported for the data \""
                         + getDataName() + "\". Please select a different "

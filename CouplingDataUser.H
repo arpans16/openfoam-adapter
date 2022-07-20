@@ -13,7 +13,9 @@ enum class LocationType
 {
     none,
     faceCenters,
-    faceNodes
+    faceNodes,
+    cellCenters,
+    cellFaceCenters
 };
 
 class CouplingDataUser
