@@ -1,0 +1,24 @@
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           dictionary;
+    object          motionProperties;
+}
+
+dynamicFvMesh   dynamicMotionSolverFvMesh;
+
+motionSolverLibs ( "libfvMotionSolvers.so" );
+
+solver          displacementLaplacian;
+
+displacementLaplacianCoeffs
+{
+	diffusivity	quadratic inverseDistance (interface); ;
+}
+
+frozenDiffusion     yes;
+distancePatches
+(
+    interface
+); 

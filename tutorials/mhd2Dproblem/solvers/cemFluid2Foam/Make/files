@@ -1,0 +1,3 @@
+cemFluid2Foam.C
+
+EXE = $(FOAM_APPBIN)/cemFluid2Foam

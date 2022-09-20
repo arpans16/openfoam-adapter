@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH -A nsed
+#SBATCH -p batch
+#SBATCH -N 1
+#SBATCH -n 2
+#SBATCH -J cht
+#SBATCH --mem=100g
+#SBATCH -t 01:00:00
+#SBATCH -o log_cht
+#SBATCH -e err_cht
+#SBATCH --job-name=cht
+
+# Source environment file
+source /home/2as/bash_preCICE
+cd /home/2as/OFv1912/openfoam-adapter/tutorials/flow-over-heated-plate-nearest-projection-flipped
+rm -r cht* log_* err_* job.pbs.* core.*
+
+cd ./fluid-openfoam/
+./run.sh
+mpirun -np 2 flowSolveFoam -parallel 1>logRun 2>errRun &
+
+cd ../solid-openfoam/
+mpirun -np 2 energySolveFoam -parallel 1>logRun 2>errRun &
+
+cd ../
+
+wait
+
+echo "DONE!"
