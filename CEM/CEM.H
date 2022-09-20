@@ -1,0 +1,49 @@
+#ifndef CEM_H
+#define CEM_H
+
+#include "Interface.H"
+
+#include "CEM/Potential.H"
+#include "CEM/ElectricFlux.H"
+
+#include "fvCFD.H"
+
+namespace preciceAdapter
+{
+namespace CEM
+{
+
+class ConjugateElectroMagnetics
+{
+
+protected:
+    //- OpenFOAM fvMesh object
+    const Foam::fvMesh& mesh_;
+
+    // TODO: Create a struct for all the parameter names
+
+    //- Name of the potential field
+    std::string namePhiE_ = "phiE";
+
+protected:
+    //- Read the CEM-related options from the adapter's configuraiton file
+    bool readConfig(const IOdictionary& adapterConfig);
+
+public:
+    //- Constructor
+    ConjugateElectroMagnetics(const Foam::fvMesh& mesh);
+
+    //- Configure
+    bool configure(const IOdictionary& adapterConfig);
+
+    //- Add coupling data writers
+    bool addWriters(std::string dataName, Interface* interface);
+
+    //- Add coupling data readers
+    bool addReaders(std::string dataName, Interface* interface);
+};
+
+}
+}
+
+#endif

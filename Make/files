@@ -12,6 +12,11 @@ CHT/SinkTemperature.C
 
 CHT/CHT.C
 
+CEM/Potential.C
+CEM/ElectricFlux.C
+
+CEM/CEM.C
+
 FSI/FSI.C
 FSI/ForceBase.C
 FSI/Force.C

@@ -6,6 +6,9 @@
 // Conjugate Heat Transfer module
 #include "CHT/CHT.H"
 
+// Conjugate Electro Magnetics module
+#include "CEM/CEM.H"
+
 // Fluid-Structure Interaction module
 #include "FSI/FSI.H"
 
@@ -77,6 +80,9 @@ private:
     //- Switch to enable the ConjugateHeatTransfer module
     bool CHTenabled_ = false;
 
+    //- Switch to enable the ConjugateElectroMagnetics module
+    bool CEMenabled_ = false;
+
     //- Switch to enable the FluidStructureInteraction module
     bool FSIenabled_ = false;
 
@@ -96,6 +102,9 @@ private:
 
     //- Conjugate Heat Transfer module object
     CHT::ConjugateHeatTransfer* CHT_ = NULL;
+
+    //- Conjugate Electro Magnetics module object
+    CEM::ConjugateElectroMagnetics* CEM_ = NULL;
 
     //- Fluid-Structure Interaction module object
     FSI::FluidStructureInteraction* FSI_ = NULL;

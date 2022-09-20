@@ -57,6 +57,11 @@ bool preciceAdapter::Adapter::configFileRead()
                 CHTenabled_ = true;
             }
 
+            if (module == "CEM")
+            {
+                CEMenabled_ = true;
+            }
+
             if (module == "FSI")
             {
                 FSIenabled_ = true;
@@ -151,6 +156,15 @@ bool preciceAdapter::Adapter::configFileRead()
             }
         }
 
+        if (CEMenabled_)
+        {
+            CEM_ = new CEM::ConjugateElectroMagnetics(mesh_);
+            if (!CEM_->configure(preciceDict))
+            {
+                return false;
+            }
+        }
+
         // If the FSI module is enabled, create it, read the
         // FSI-specific options and configure it.
         if (FSIenabled_)
@@ -188,7 +202,7 @@ bool preciceAdapter::Adapter::configFileRead()
 
         // NOTE: Create your module and read any options specific to it here
 
-        if (!CHTenabled_ && !FSIenabled_ && !FFenabled_) // NOTE: Add your new switch here
+        if (!CHTenabled_ && !CEMenabled_ && !FSIenabled_ && !FFenabled_) // NOTE: Add your new switch here
         {
             adapterInfo("No module is enabled.", "error-deferred");
             return false;
@@ -267,6 +281,13 @@ void preciceAdapter::Adapter::configure()
                     inModules++;
                 }
 
+                // Add CEM-related coupling data writers
+                if (CEMenabled_ && CEM_->addWriters(dataName, interface))
+                {
+                    inModules++;
+		}
+                //                                                                     }
+
                 // Add FSI-related coupling data writers
                 if (FSIenabled_ && FSI_->addWriters(dataName, interface))
                 {
@@ -305,6 +326,9 @@ void preciceAdapter::Adapter::configure()
                 // Add CHT-related coupling data readers
                 if (CHTenabled_ && CHT_->addReaders(dataName, interface)) inModules++;
 
+                // Add CEM-related coupling data readers
+                if (CEMenabled_ && CEM_->addReaders(dataName, interface)) inModules++;
+                                 
                 // Add FSI-related coupling data readers
                 if (FSIenabled_ && FSI_->addReaders(dataName, interface)) inModules++;
 
@@ -1576,6 +1600,14 @@ void preciceAdapter::Adapter::teardown()
         DEBUG(adapterInfo("Destroying the CHT module..."));
         delete CHT_;
         CHT_ = NULL;
+    }
+
+    // Delete the CEM module
+    if (NULL != CEM_)
+    {
+        DEBUG(adapterInfo("Destroying the CEM module..."));
+        delete CEM_;
+        CEM_ = NULL;
     }
 
     // Delete the FSI module
