@@ -25,6 +25,9 @@ protected:
     //- Name of the potential field
     std::string namePhiE_ = "phiE";
 
+    //- Name of the u cross b field
+    std::string nameuxb_ = "UxB";
+
 protected:
     //- Read the CEM-related options from the adapter's configuraiton file
     bool readConfig(const IOdictionary& adapterConfig);

@@ -9,10 +9,10 @@ using namespace Foam;
 
 preciceAdapter::CEM::ElectricFlux::ElectricFlux(
     const Foam::fvMesh& mesh,
-    const std::string namePhiE)
-: phiE_(
-    const_cast<volScalarField*>(
-        &mesh.lookupObject<volScalarField>(namePhiE))),
+    const std::string namePhiE,
+    const std::string nameuxb)
+: phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
+  uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))), 
   mesh_(mesh)
 {
     dataType_ = scalar;
@@ -27,9 +27,8 @@ void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectiv
     {
         int patchID = patchIDs_.at(j);
 
-        const scalarField gradientPatch(
-            (phiE_->boundaryField()[patchID])
-                .snGrad());
+        const scalarField gradientPatch((phiE_->boundaryField()[patchID]).snGrad());
+	const scalarField uxb_scalar(uxb_->boundaryField()[patchID].component(2)); // & patchIDs_[j].Sf());
 
         // If we use the mesh connectivity, we interpolate from the centres to the nodes
         if (meshConnectivity)
@@ -37,10 +36,9 @@ void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectiv
             //Setup Interpolation object
             primitivePatchInterpolation patchInterpolator(mesh_.boundaryMesh()[patchID]);
 
-            scalarField gradientPoints;
-
-            //Interpolate
-            gradientPoints = patchInterpolator.faceToPointInterpolate(gradientPatch);
+	    //Interpolate on patches
+            scalarField gradientPoints = patchInterpolator.faceToPointInterpolate(gradientPatch);
+	    scalarField uxbPoints = patchInterpolator.faceToPointInterpolate(uxb_scalar);
 
             // For every cell of the patch
             forAll(gradientPoints, i)
@@ -48,7 +46,7 @@ void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectiv
                 // Copy the heat flux into the buffer
                 // Q = - k * gradient(T)
                 //TODO: Interpolate kappa in case of a turbulent calculation
-                buffer[bufferIndex++] = - gradientPoints[i];
+                buffer[bufferIndex++] = - gradientPoints[i] + uxbPoints[i];
             }
         }
         else
@@ -59,7 +57,7 @@ void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectiv
                 // Copy the heat flux into the buffer
                 // Q = - k * gradient(T)
                 //TODO: Interpolate kappa in case of a turbulent calculation
-                buffer[bufferIndex++] = - gradientPatch[i];
+                buffer[bufferIndex++] = - gradientPatch[i] + uxb_scalar[i];
             }
         }
     }
@@ -75,10 +73,10 @@ void preciceAdapter::CEM::ElectricFlux::read(double* buffer, const unsigned int 
         int patchID = patchIDs_.at(j);
 
         // Get the potential gradient boundary patch
-        scalarField& gradientPatch(
-            refCast<fixedGradientFvPatchScalarField>(
-                phiE_->boundaryFieldRef()[patchID])
-                .gradient());
+        scalarField& gradientPatch(refCast<fixedGradientFvPatchScalarField>(phiE_->boundaryFieldRef()[patchID]).gradient());
+
+        //scalarField& uxb_scalar(refCast<fvPatchField>(uxb_->boundaryField()[patchID].component(2)));
+        scalarField uxb_scalar(uxb_->boundaryField()[patchID].component(2));
 
         // For every cell of the patch
         forAll(gradientPatch, i)
@@ -87,7 +85,7 @@ void preciceAdapter::CEM::ElectricFlux::read(double* buffer, const unsigned int 
             // The sign of the heat flux needs to be inversed,
             // as the buffer contains the flux that enters the boundary:
             // gradient(T) = -Q / -k
-            gradientPatch[i] = buffer[bufferIndex++];
+            gradientPatch[i] = buffer[bufferIndex++] - uxb_scalar[i];
         }
     }
 }

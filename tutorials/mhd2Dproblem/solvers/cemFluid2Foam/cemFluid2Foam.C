@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
     {
         Info<< "Iteration = " << runTime.timeName() << nl << endl;
 
+	UxB = U ^ B;
+
 	solve(fvm::laplacian(phiE) == fvc::div(U ^ B));
 	phiE.correctBoundaryConditions();
 

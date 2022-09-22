@@ -25,3 +25,17 @@
         ),
         mesh
     );
+
+Info<< "Reading field UxB\n" << endl;
+volVectorField UxB
+(
+    IOobject
+    (
+        "UxB",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);

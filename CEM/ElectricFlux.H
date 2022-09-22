@@ -17,11 +17,12 @@ class ElectricFlux : public CouplingDataUser
 protected:
     //- Potential field
     Foam::volScalarField* phiE_;
+    Foam::volVectorField* uxb_;
     const Foam::fvMesh& mesh_;
 
 public:
     //- Constructor
-    ElectricFlux(const Foam::fvMesh& mesh, const std::string namePhiE);
+    ElectricFlux(const Foam::fvMesh& mesh, const std::string namePhiE, const std::string nameuxb);
 
     //- Compute electric flux values from the potential field
     //  and write them into the buffer

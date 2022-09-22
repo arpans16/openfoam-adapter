@@ -33,6 +33,10 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::readConfig(const IOdictiona
     namePhiE_ = CEMdict.lookupOrDefault<word>("namePhiE", "phiE");
     DEBUG(adapterInfo("    potential field name : " + namePhiE_));
 
+    // Read the name of the u cross b field (if different)
+    nameuxb_ = CEMdict.lookupOrDefault<word>("nameuxb", "UxB");
+    DEBUG(adapterInfo("    u cross b field name : " + nameuxb_));
+
     return true;
 }
 
@@ -51,7 +55,7 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addWriters(std::string data
     {
         interface->addCouplingDataWriter(
             dataName,
-            new ElectricFlux(mesh_, namePhiE_));
+            new ElectricFlux(mesh_, namePhiE_, nameuxb_));
         DEBUG(adapterInfo("Added writer: Electric Flux."));
     }
     else
@@ -83,7 +87,7 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addReaders(std::string data
     {
         interface->addCouplingDataReader(
             dataName,
-            new ElectricFlux(mesh_, namePhiE_));
+            new ElectricFlux(mesh_, namePhiE_, nameuxb_));
         DEBUG(adapterInfo("Added reader: Electric Flux."));
     }
     else
