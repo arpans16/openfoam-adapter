@@ -1,0 +1,38 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      B;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 0 -2 0 0 -1 0];
+
+internalField   uniform (0 1 0);
+
+boundaryField
+{
+    in
+    {
+        type            zeroGradient;
+    }
+    out
+    {
+	type		zeroGradient;
+    }
+    top
+    {
+        type            zeroGradient;
+    }
+    bottom
+    {
+        type            zeroGradient;
+    }
+    frontback
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

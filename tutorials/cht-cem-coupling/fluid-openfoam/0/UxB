@@ -1,0 +1,39 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      UxB;
+}
+
+dimensions      [ 1 1 -3 0 0 -1 0 ];
+
+internalField   uniform ( 0 0 0 );
+
+boundaryField
+{
+    in
+    {
+        type            calculated;
+	value		$internalField;
+    }
+    out
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    top
+    {
+        type            calculated;
+	value		$internalField;
+    }
+    bottom
+    {
+        type            calculated;
+	value		$internalField;
+    }
+    frontback
+    {
+        type            empty;
+    }
+}
