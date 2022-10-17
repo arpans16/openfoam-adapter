@@ -46,7 +46,7 @@ interfaces
     
     writeData
     (
-      ElectricFlux
+      Current
       Heat-Flux
     );
   };

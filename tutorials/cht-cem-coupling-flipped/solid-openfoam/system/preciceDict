@@ -42,7 +42,7 @@ interfaces
     
     readData
     (
-      ElectricFlux
+      Current
       Heat-Flux
     );
     

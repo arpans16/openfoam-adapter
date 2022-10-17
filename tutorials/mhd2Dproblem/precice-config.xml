@@ -9,10 +9,10 @@
 
   <solver-interface dimensions="3">
     <data:scalar name="Potential" />
-    <data:scalar name="ElectricFlux" />
+    <data:scalar name="Current" />
 
     <mesh name="Fluid-Mesh-Centers">
-      <use-data name="ElectricFlux" />
+      <use-data name="Current" />
     </mesh>
 
     <mesh name="Fluid-Mesh-Nodes">
@@ -24,14 +24,14 @@
     </mesh>
 
     <mesh name="Solid-Mesh-Nodes">
-      <use-data name="ElectricFlux" />
+      <use-data name="Current" />
     </mesh>
 
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
       <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" from="Solid" />
-      <write-data name="ElectricFlux" mesh="Fluid-Mesh-Centers" />
+      <write-data name="Current" mesh="Fluid-Mesh-Centers" />
       <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
         direction="read"
@@ -45,7 +45,7 @@
       <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" provide="yes" />
       <write-data name="Potential" mesh="Solid-Mesh-Centers" />
-      <read-data name="ElectricFlux" mesh="Solid-Mesh-Nodes" />
+      <read-data name="Current" mesh="Solid-Mesh-Nodes" />
       <!-- <export:vtk directory="preCICE-output" /> -->
       <mapping:nearest-projection
         direction="read"
@@ -60,12 +60,12 @@
       <time-window-size value="0.1" />
       <max-time value="1" />
       <participants first="Solid" second="Fluid" />
-      <exchange data="ElectricFlux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <max-iterations value="20" />
       <relative-convergence-measure limit="1.0e-4" data="Potential" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
-        <data mesh="Fluid-Mesh-Centers" name="ElectricFlux" />
+        <data mesh="Fluid-Mesh-Centers" name="Current" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="20" />
         <time-windows-reused value="10" />

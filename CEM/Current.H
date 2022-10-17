@@ -1,5 +1,5 @@
-#ifndef CEM_ELECTRICFLUX_H
-#define CEM_ELECTRICFLUX_H
+#ifndef CEM_CURRENT_H
+#define CEM_CURRENT_H
 
 #include "CouplingDataUser.H"
 
@@ -10,8 +10,8 @@ namespace preciceAdapter
 namespace CEM
 {
 
-//- Abstract class that writes and reads electric flux.
-class ElectricFlux : public CouplingDataUser
+//- Abstract class that writes and reads current (electric flux).
+class Current : public CouplingDataUser
 {
 
 protected:
@@ -22,13 +22,13 @@ protected:
 
 public:
     //- Constructor
-    ElectricFlux(const Foam::fvMesh& mesh, const std::string namePhiE, const std::string nameuxb);
+    Current(const Foam::fvMesh& mesh, const std::string namePhiE, const std::string nameuxb);
 
-    //- Compute electric flux values from the potential field
+    //- Compute current values from the potential field
     //  and write them into the buffer
     virtual void write(double* buffer, bool meshConnectivity, const unsigned int dim);
 
-    //- Read electric flux values from the buffer and assign them to
+    //- Read current values from the buffer and assign them to
     //  the gradient of the potential field
     virtual void read(double* buffer, const unsigned int dim);
 
@@ -38,7 +38,7 @@ public:
     std::string getDataName() const override;
 
     //- Destructor
-    virtual ~ElectricFlux() {};
+    virtual ~Current() {};
 };
 
 }

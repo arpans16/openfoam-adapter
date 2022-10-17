@@ -9,12 +9,12 @@
 
   <solver-interface dimensions="3">
     <data:scalar name="Potential" />
-    <data:scalar name="ElectricFlux" />
+    <data:scalar name="Current" />
     <data:scalar name="Temperature" />
     <data:scalar name="Heat-Flux" />
 
     <mesh name="Fluid-Mesh-Centers">
-      <use-data name="ElectricFlux" />
+      <use-data name="Current" />
       <use-data name="Heat-Flux" />
     </mesh>
 
@@ -29,7 +29,7 @@
     </mesh>
 
     <mesh name="Solid-Mesh-Nodes">
-      <use-data name="ElectricFlux" />
+      <use-data name="Current" />
       <use-data name="Heat-Flux" />
     </mesh>
 
@@ -37,7 +37,7 @@
       <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
       <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" from="Solid" />
-      <write-data name="ElectricFlux" mesh="Fluid-Mesh-Centers" />
+      <write-data name="Current" mesh="Fluid-Mesh-Centers" />
       <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
       <write-data name="Heat-Flux" mesh="Fluid-Mesh-Centers" />
       <read-data name="Temperature" mesh="Fluid-Mesh-Nodes" />
@@ -53,7 +53,7 @@
       <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" provide="yes" />
       <write-data name="Potential" mesh="Solid-Mesh-Centers" />
-      <read-data name="ElectricFlux" mesh="Solid-Mesh-Nodes" />
+      <read-data name="Current" mesh="Solid-Mesh-Nodes" />
       <write-data name="Temperature" mesh="Solid-Mesh-Centers" />
       <read-data name="Heat-Flux" mesh="Solid-Mesh-Nodes" />
       <!-- <export:vtk directory="preCICE-output" /> -->
@@ -72,12 +72,12 @@
       <participants first="Solid" second="Fluid" />
       <exchange data="Heat-Flux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <exchange data="Temperature" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
-      <exchange data="ElectricFlux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <max-iterations value="50" />
       <relative-convergence-measure limit="1.0e-6" data="Potential" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
-        <data mesh="Fluid-Mesh-Centers" name="ElectricFlux" />
+        <data mesh="Fluid-Mesh-Centers" name="Current" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="40" />
         <time-windows-reused value="10" />

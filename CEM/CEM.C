@@ -51,12 +51,12 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addWriters(std::string data
             new Potential(mesh_, namePhiE_));
         DEBUG(adapterInfo("Added writer: Potential."));
     }
-    else if (dataName.find("ElectricFlux") == 0)
+    else if (dataName.find("Current") == 0)
     {
         interface->addCouplingDataWriter(
             dataName,
-            new ElectricFlux(mesh_, namePhiE_, nameuxb_));
-        DEBUG(adapterInfo("Added writer: Electric Flux."));
+            new Current(mesh_, namePhiE_, nameuxb_));
+        DEBUG(adapterInfo("Added writer: Current."));
     }
     else
     {
@@ -83,12 +83,12 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addReaders(std::string data
             new Potential(mesh_, namePhiE_));
         DEBUG(adapterInfo("Added reader: Potential."));
     }
-    else if (dataName.find("ElectricFlux") == 0)
+    else if (dataName.find("Current") == 0)
     {
         interface->addCouplingDataReader(
             dataName,
-            new ElectricFlux(mesh_, namePhiE_, nameuxb_));
-        DEBUG(adapterInfo("Added reader: Electric Flux."));
+            new Current(mesh_, namePhiE_, nameuxb_));
+        DEBUG(adapterInfo("Added reader: Current."));
     }
     else
     {

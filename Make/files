@@ -13,7 +13,7 @@ CHT/SinkTemperature.C
 CHT/CHT.C
 
 CEM/Potential.C
-CEM/ElectricFlux.C
+CEM/Current.C
 
 CEM/CEM.C
 

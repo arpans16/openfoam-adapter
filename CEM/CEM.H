@@ -4,7 +4,7 @@
 #include "Interface.H"
 
 #include "CEM/Potential.H"
-#include "CEM/ElectricFlux.H"
+#include "CEM/Current.H"
 
 #include "fvCFD.H"
 

@@ -41,7 +41,7 @@ interfaces
     
     readData
     (
-      ElectricFlux
+      Current
     );
     
     writeData

@@ -1,13 +1,13 @@
-#include "ElectricFlux.H"
+#include "Current.H"
 #include "primitivePatchInterpolation.H"
 
 //#include "fvCFD.H"
 
 using namespace Foam;
 
-//----- preciceAdapter::CEM::ElectricFlux -----------------------------------------
+//----- preciceAdapter::CEM::Current -----------------------------------------
 
-preciceAdapter::CEM::ElectricFlux::ElectricFlux(
+preciceAdapter::CEM::Current::Current(
     const Foam::fvMesh& mesh,
     const std::string namePhiE,
     const std::string nameuxb)
@@ -18,7 +18,7 @@ preciceAdapter::CEM::ElectricFlux::ElectricFlux(
     dataType_ = scalar;
 }
 
-void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectivity, const unsigned int dim)
+void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, const unsigned int dim)
 {
     int bufferIndex = 0;
 
@@ -63,7 +63,7 @@ void preciceAdapter::CEM::ElectricFlux::write(double* buffer, bool meshConnectiv
     }
 }
 
-void preciceAdapter::CEM::ElectricFlux::read(double* buffer, const unsigned int dim)
+void preciceAdapter::CEM::Current::read(double* buffer, const unsigned int dim)
 {
     int bufferIndex = 0;
 
@@ -90,7 +90,7 @@ void preciceAdapter::CEM::ElectricFlux::read(double* buffer, const unsigned int 
     }
 }
 
-bool preciceAdapter::CEM::ElectricFlux::isLocationTypeSupported(const bool meshConnectivity) const
+bool preciceAdapter::CEM::Current::isLocationTypeSupported(const bool meshConnectivity) const
 {
     // For cases with mesh connectivity, we support:
     // - face nodes, only for writing
@@ -107,7 +107,7 @@ bool preciceAdapter::CEM::ElectricFlux::isLocationTypeSupported(const bool meshC
     }
 }
 
-std::string preciceAdapter::CEM::ElectricFlux::getDataName() const
+std::string preciceAdapter::CEM::Current::getDataName() const
 {
-    return "ElectricFlux";
+    return "Current";
 }
