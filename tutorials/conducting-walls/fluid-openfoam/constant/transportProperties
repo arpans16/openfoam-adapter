@@ -1,0 +1,23 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rho             1;
+
+nu              dimensions [0 2 -1 0 0 0 0] 1;
+
+mu              1;
+
+sigma           100;
+
+DT               DT  [ 0  2 -1  0 0 0 0 ] 1;
+
+Ubar		dimensions [0 1 -1 0 0 0 0] (0 0 1);
+
+// ************************************************************************* //
