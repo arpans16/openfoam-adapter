@@ -20,29 +20,31 @@ internalField   uniform 0.5;
 
 boundaryField
 {
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
+    "(inlet|outlet|bot_surf|top_surf|ext_walls|)" //right_int|left_int)"
     {
         type            zeroGradient;
     }
     top_int
     {
         type            fixedGradient;
-	gradient	uniform 1.0;
+	gradient	uniform 0.0;
+        //value           uniform 0.0;
     }
     bot_int
     {
-        type            fixedGradient;
-        gradient        uniform 1.0;
+        type            fixedValue;
+        value           $internalField; //uniform 1.0;
     }
     left_int
     {
         type            fixedGradient;
-	gradient	uniform 1.0;
+	gradient	uniform 0.0;
+        //value           $internalField; //uniform 0.5;
     }
     right_int
     {
-        type            fixedGradient;
-        gradient        uniform 1.0;
+        type            fixedValue;
+        value           $internalField; //uniform 0.5;
     }
 }
 

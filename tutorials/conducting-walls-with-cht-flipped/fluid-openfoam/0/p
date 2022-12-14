@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2112                                 |
+|  \\    /   O peration     | Version:  v1912                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -10,41 +10,40 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      phiE;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 2 -3 0 0 -1 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 0.5;
+internalField   uniform 1e5;
 
 boundaryField
 {
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
+    inlet
     {
         type            zeroGradient;
     }
-    top_int
+    outlet
     {
-        type            fixedGradient;
-	gradient	uniform 1.0;
+	type		fixedValue;
+	value		uniform 1e5;
     }
-    bot_int
+    top
     {
-        type            fixedGradient;
-        gradient        uniform 1.0;
+        type            zeroGradient;
     }
-    left_int
+    bottom
     {
-        type            fixedGradient;
-	gradient	uniform 1.0;
+        type            zeroGradient;
     }
-    right_int
+    left
     {
-        type            fixedGradient;
-        gradient        uniform 1.0;
+        type            zeroGradient;
+    }
+    right
+    {
+        type            zeroGradient;
     }
 }
 
-
-// ************************************************************************* //

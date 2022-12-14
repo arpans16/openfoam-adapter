@@ -9,42 +9,15 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      phiE;
+    class       dictionary;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 2 -3 0 0 -1 0];
+epsilon0        8.85419e-12;
 
-internalField   uniform 0.5;
+k               0.00016;
 
-boundaryField
-{
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
-    {
-        type            zeroGradient;
-    }
-    top_int
-    {
-        type            fixedGradient;
-	gradient	uniform 1.0;
-    }
-    bot_int
-    {
-        type            fixedGradient;
-        gradient        uniform 1.0;
-    }
-    left_int
-    {
-        type            fixedGradient;
-	gradient	uniform 1.0;
-    }
-    right_int
-    {
-        type            fixedGradient;
-        gradient        uniform 1.0;
-    }
-}
-
+one		1.0;
 
 // ************************************************************************* //

@@ -20,7 +20,7 @@ internalField   uniform 0.5;
 
 boundaryField
 {
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
+    "(inlet|outlet|ext_walls|bot_surf|top_surf)" //right_int|left_int)"
     {
         type            zeroGradient;
     }

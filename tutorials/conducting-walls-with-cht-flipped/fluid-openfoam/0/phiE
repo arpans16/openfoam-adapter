@@ -30,16 +30,18 @@ boundaryField
     {
         type            fixedValue;
 	value		uniform 0.1;
+        //gradient        uniform 0;
     }
     left
     {
-        type            fixedValue;
+        type            fixedValue; //zeroGradient;
 	value		uniform 0.1;
     }
     right
     {
-        type            fixedValue;
+        type            fixedValue; //zeroGradient;
 	value		uniform 0.1;
+	//gradient	uniform 0;
     }
 }
 

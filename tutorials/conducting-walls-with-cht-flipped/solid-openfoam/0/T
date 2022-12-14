@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2112                                 |
+|  \\    /   O peration     | Version:  v1912                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -10,41 +10,49 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      phiE;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 2 -3 0 0 -1 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0.5;
+internalField   uniform 300;
 
 boundaryField
 {
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
+    "(inlet|outlet|ext_walls)"
     {
-        type            zeroGradient;
+	type		zeroGradient;
+    }
+    bot_surf
+    {
+        type            fixedGradient;
+        gradient        uniform 1000;
+    }
+    top_surf
+    {
+        type            fixedValue;
+        value           uniform 300;
     }
     top_int
     {
-        type            fixedGradient;
-	gradient	uniform 1.0;
+	type		fixedGradient;
+	gradient	uniform 1;
     }
     bot_int
     {
         type            fixedGradient;
-        gradient        uniform 1.0;
+        gradient        uniform 1;
     }
     left_int
     {
         type            fixedGradient;
-	gradient	uniform 1.0;
+        gradient        uniform 1;
     }
     right_int
     {
         type            fixedGradient;
-        gradient        uniform 1.0;
+        gradient        uniform 1;
     }
 }
 
-
-// ************************************************************************* //

@@ -80,7 +80,13 @@ int main(int argc, char *argv[])
         }
         #include "write.H"
 
-        solve(fvm::laplacian(phiE));
+        fvScalarMatrix phiEqn
+        (
+	    fvm::laplacian(phiE)
+        );
+        phiEqn.setReference(0, 0);
+        phiEqn.solve(); //(mesh.solver(phiE.select(piso.finalInnerIter())));
+        //solve(fvm::laplacian(phiE));
         phiE.correctBoundaryConditions();
 
         runTime.write();

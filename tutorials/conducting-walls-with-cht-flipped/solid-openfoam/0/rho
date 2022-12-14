@@ -10,39 +10,20 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      phiE;
+    object      rho;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 2 -3 0 0 -1 0];
+dimensions      [0 -3 1 0 0 1 0];
 
-internalField   uniform 0.5;
+internalField   uniform 0;
 
 boundaryField
 {
-    "(inlet|outlet|ext_walls|)" //right_int|left_int)"
+    "(inlet|outlet|bot_surf|top_surf|ext_walls|top_int|bot_int|left_int|right_int)"
     {
         type            zeroGradient;
-    }
-    top_int
-    {
-        type            fixedGradient;
-	gradient	uniform 1.0;
-    }
-    bot_int
-    {
-        type            fixedGradient;
-        gradient        uniform 1.0;
-    }
-    left_int
-    {
-        type            fixedGradient;
-	gradient	uniform 1.0;
-    }
-    right_int
-    {
-        type            fixedGradient;
-        gradient        uniform 1.0;
+        value           $internalField;
     }
 }
 
