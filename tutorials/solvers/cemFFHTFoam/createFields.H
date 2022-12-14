@@ -87,7 +87,7 @@ volVectorField B
     mesh
 );
 
-Info<< "Reading field phiE\n" << endl;
+Info<< "Reading-fvc::grad(phiE)+UxBhiE\n" << endl;
 volScalarField phiE
 (
     IOobject
@@ -129,6 +129,54 @@ volScalarField T
     ),
     mesh
 );
+
+Info<< "Reading field J\n" << endl;
+
+IOobject JHeader
+(
+    "J",
+    runTime.timeName(),
+    mesh,
+    IOobject::NO_READ
+);
+volVectorField* JPtr = nullptr;
+JPtr = new volVectorField
+(
+    IOobject
+    (
+        "J",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(phiE)+UxB
+);
+volVectorField& J = *JPtr;
+
+Info<< "Reading field Lorentz\n" << endl;
+
+IOobject LorentzHeader
+(
+    "Lorentz",
+    runTime.timeName(),
+    mesh,
+    IOobject::NO_READ
+);
+volVectorField* LorentzPtr = nullptr;
+LorentzPtr = new volVectorField
+(
+    IOobject
+    (
+        "Lorentz",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    sigma/rho * (J ^ B) //-fvc::grad(phiE)+UxB
+);
+volVectorField& Lorentz = *LorentzPtr;
 
 /*
 Info<< "Reading transportProperties\n" << endl;
