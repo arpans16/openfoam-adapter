@@ -14,7 +14,7 @@ nu              dimensions [0 2 -1 0 0 0 0] 1;
 
 mu              1;
 
-sigma           100;
+sigma           10;
 
 DT               DT  [ 0  2 -1  0 0 0 0 ] 1;
 

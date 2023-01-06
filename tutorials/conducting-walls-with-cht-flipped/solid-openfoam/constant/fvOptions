@@ -14,16 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-momentumSource
-{
-    type            meanVelocityForce;
-
-    selectionMode   all;
-
-    fields          (U);
-    Ubar            (0 0 1);
-}
-
 heatSource
 {
     type            scalarSemiImplicitSource;
@@ -35,7 +25,7 @@ heatSource
         volumeMode      specific; // absolute;
         injectionRateSuSp
         {
-            T     (10 0);
+            T     (5 0);
         }
     }
 }
