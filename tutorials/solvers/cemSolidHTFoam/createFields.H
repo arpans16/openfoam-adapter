@@ -1,3 +1,4 @@
+
     Info<< "Reading physicalProperties\n" << endl;
 
     IOdictionary physicalProperties
@@ -18,6 +19,20 @@
         IOobject
         (
             "phiE",
+            runTime.timeName(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
+    );
+
+    Info<< "Reading field JE\n" << endl;
+    volVectorField JE
+    (
+        IOobject
+        (
+            "JE",
             runTime.timeName(),
             mesh,
             IOobject::MUST_READ,
@@ -70,6 +85,8 @@ volScalarField DT
     mesh,
     dimensionedScalar(dimViscosity, Zero)
 );
+
+dimensionedScalar corrUnits("corrUnits", dimensionSet(-2,-2,5,1,0,2,0), scalar(1.0));
 
 if (!DT.headerOk())
 {

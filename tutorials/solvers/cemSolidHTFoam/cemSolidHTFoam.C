@@ -68,9 +68,11 @@ int main(int argc, char *argv[])
 
         while (simple.correctNonOrthogonal())
         {
+	    volScalarField JouleHeating = JE&JE * corrUnits;
             fvScalarMatrix TEqn
             (
-                fvm::ddt(T) - fvm::laplacian(DT, T)
+                fvm::ddt(T) - fvm::laplacian(DT, T) 
+	      + JouleHeating
              ==
                 fvOptions(T)
             );
@@ -88,6 +90,8 @@ int main(int argc, char *argv[])
         phiEqn.solve(); //(mesh.solver(phiE.select(piso.finalInnerIter())));
         //solve(fvm::laplacian(phiE));
         phiE.correctBoundaryConditions();
+
+	JE = -fvc::grad(phiE);
 
         runTime.write();
         runTime.printExecutionTime(Info);

@@ -5,4 +5,4 @@ set -e -u
 
 clean_openfoam .
 
-#blockMesh
+blockMesh
