@@ -36,31 +36,31 @@
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
       <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
-      <use-mesh name="Solid-Mesh-Nodes" from="Solid" />
-      <read-data name="Current" mesh="Fluid-Mesh-Centers" />
-      <write-data name="Potential" mesh="Fluid-Mesh-Nodes" />
-      <read-data name="Heat-Flux" mesh="Fluid-Mesh-Centers" />
-      <write-data name="Temperature" mesh="Fluid-Mesh-Nodes" />
+      <use-mesh name="Solid-Mesh-Centers" from="Solid" />
+      <write-data name="Current" mesh="Fluid-Mesh-Centers" />
+      <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
+      <write-data name="Heat-Flux" mesh="Fluid-Mesh-Centers" />
+      <read-data name="Temperature" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
         direction="read"
-        from="Solid-Mesh-Nodes"
-        to="Fluid-Mesh-Centers"
+        from="Solid-Mesh-Centers"
+        to="Fluid-Mesh-Nodes"
         constraint="consistent" />
     </participant>
 
     <participant name="Solid">
-      <use-mesh name="Fluid-Mesh-Nodes" from="Fluid" />
+      <use-mesh name="Fluid-Mesh-Centers" from="Fluid" />
       <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" provide="yes" />
-      <read-data name="Potential" mesh="Solid-Mesh-Centers" />
-      <write-data name="Current" mesh="Solid-Mesh-Nodes" />
-      <read-data name="Temperature" mesh="Solid-Mesh-Centers" />
-      <write-data name="Heat-Flux" mesh="Solid-Mesh-Nodes" />
+      <write-data name="Potential" mesh="Solid-Mesh-Centers" />
+      <read-data name="Current" mesh="Solid-Mesh-Nodes" />
+      <write-data name="Temperature" mesh="Solid-Mesh-Centers" />
+      <read-data name="Heat-Flux" mesh="Solid-Mesh-Nodes" />
       <!-- <export:vtk directory="preCICE-output" /> -->
       <mapping:nearest-projection
         direction="read"
-        from="Fluid-Mesh-Nodes"
-        to="Solid-Mesh-Centers"
+        from="Fluid-Mesh-Centers"
+        to="Solid-Mesh-Nodes"
         constraint="consistent" />
     </participant>
 
@@ -68,18 +68,16 @@
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.1" />
-      <max-time value="1000" />
-      <participants first="Fluid" second="Solid" />
-      <exchange data="Temperature" mesh="Fluid-Mesh-Nodes" from="Fluid" to="Solid" />
-      <exchange data="Heat-Flux" mesh="Solid-Mesh-Nodes" from="Solid" to="Fluid" />
-      <exchange data="Potential" mesh="Fluid-Mesh-Nodes" from="Fluid" to="Solid" />
-      <exchange data="Current" mesh="Solid-Mesh-Nodes" from="Solid" to="Fluid" />
+      <max-time value="1" />
+      <participants first="Solid" second="Fluid" />
+      <exchange data="Heat-Flux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="Temperature" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
+      <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <max-iterations value="50" />
-      <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="Fluid-Mesh-Nodes" />
-      <relative-convergence-measure limit="1.0e-6" data="Potential" mesh="Fluid-Mesh-Nodes" />
+      <relative-convergence-measure limit="1.0e-6" data="Potential" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
-        <data mesh="Solid-Mesh-Nodes" name="Heat-Flux" />
-        <data mesh="Solid-Mesh-Nodes" name="Current" />
+        <data mesh="Fluid-Mesh-Centers" name="Current" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="40" />
         <time-windows-reused value="10" />

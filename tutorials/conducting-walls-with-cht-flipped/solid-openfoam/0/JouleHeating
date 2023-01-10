@@ -1,0 +1,23 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      JouleHeating;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 -1 1 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    "(inlet|outlet|bot_surf|top_surf|ext_walls|top_int|bot_int|left_int|right_int)"
+    {
+        type            calculated;
+        value           $internalField;
+    }
+}
+
+// ************************************************************************* //

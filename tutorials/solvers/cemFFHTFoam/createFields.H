@@ -87,7 +87,7 @@ volVectorField B
     mesh
 );
 
-Info<< "Reading-fvc::grad(phiE)+UxBhiE\n" << endl;
+Info<< "Reading field phiE\n" << endl;
 volScalarField phiE
 (
     IOobject
@@ -116,7 +116,6 @@ volVectorField UxB
 );
 
 Info<< "Reading field T\n" << endl;
-
 volScalarField T
 (
     IOobject
@@ -131,52 +130,48 @@ volScalarField T
 );
 
 Info<< "Reading field J\n" << endl;
-
-IOobject JHeader
-(
-    "J",
-    runTime.timeName(),
-    mesh,
-    IOobject::NO_READ
-);
-volVectorField* JPtr = nullptr;
-JPtr = new volVectorField
+volVectorField J
 (
     IOobject
     (
         "J",
         runTime.timeName(),
         mesh,
-        IOobject::NO_READ,
+        IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(phiE)+UxB
+    mesh
 );
-volVectorField& J = *JPtr;
 
 Info<< "Reading field Lorentz\n" << endl;
-
-IOobject LorentzHeader
-(
-    "Lorentz",
-    runTime.timeName(),
-    mesh,
-    IOobject::NO_READ
-);
-volVectorField* LorentzPtr = nullptr;
-LorentzPtr = new volVectorField
+volVectorField Lorentz
 (
     IOobject
     (
         "Lorentz",
         runTime.timeName(),
         mesh,
-        IOobject::NO_READ,
+        IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
-    sigma/rho * (J ^ B) //-fvc::grad(phiE)+UxB
+    mesh
 );
-volVectorField& Lorentz = *LorentzPtr;
+
+dimensionedScalar corrUnits("corrUnits", dimensionSet(0,4,-1,1,0,-2,0), scalar(1.0));
+
+Info<< "Reading field JouleHeating\n" << endl;
+volScalarField JouleHeating
+(
+    IOobject
+    (
+        "JouleHeating",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 /*
 Info<< "Reading transportProperties\n" << endl;

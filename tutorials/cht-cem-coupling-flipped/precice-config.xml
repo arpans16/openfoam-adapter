@@ -68,7 +68,7 @@
 
     <coupling-scheme:serial-implicit>
       <time-window-size value="0.1" />
-      <max-time value="1" />
+      <max-time value="1000" />
       <participants first="Solid" second="Fluid" />
       <exchange data="Heat-Flux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <exchange data="Temperature" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
@@ -76,8 +76,10 @@
       <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <max-iterations value="50" />
       <relative-convergence-measure limit="1.0e-6" data="Potential" mesh="Solid-Mesh-Centers" />
+      <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
         <data mesh="Fluid-Mesh-Centers" name="Current" />
+        <data mesh="Fluid-Mesh-Centers" name="Heat-Flux" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="40" />
         <time-windows-reused value="10" />

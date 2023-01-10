@@ -88,6 +88,20 @@ volScalarField DT
 
 dimensionedScalar corrUnits("corrUnits", dimensionSet(-2,-2,5,1,0,2,0), scalar(1.0));
 
+Info<< "Reading field JouleHeating\n" << endl;
+volScalarField JouleHeating
+(
+    IOobject
+    (
+        "JouleHeating",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
 if (!DT.headerOk())
 {
     IOdictionary transportProperties

@@ -1,3 +1,0 @@
-cemSolidHTFoam.C
-
-EXE = $(FOAM_APPBIN)/cemSolidHTFoam

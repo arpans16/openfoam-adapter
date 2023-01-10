@@ -10,23 +10,12 @@ FoamFile
     version     2.0;
     format      ascii;
     arch        "LSB;label=32;scalar=64";
-    class       volVectorField;
-    location    "0";
-    object      Lorentz;
+    class       dictionary;
+    location    "1/uniform/functionObjects";
+    object      functionObjectProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -2 -2 0 0 0 0];
 
-internalField	uniform (0 0 0);
-
-boundaryField
-{
-    "(inlet|outlet|top|bottom|right|left)"
-    {
-        type            calculated;
-        value           uniform (0 0 0);
-    }
-}
 
 // ************************************************************************* //
