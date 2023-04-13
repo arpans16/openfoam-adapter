@@ -136,7 +136,7 @@ bool preciceAdapter::CHT::ConjugateHeatTransfer::addWriters(std::string dataName
             new Temperature(mesh_, nameT_));
         DEBUG(adapterInfo("Added writer: Temperature."));
     }
-    else if (dataName.find("Heat-Flux") == 0)
+    else if (dataName.find("HeatFlux") == 0)
     {
         if (solverType_.compare("compressible") == 0)
         {

@@ -33,6 +33,10 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::readConfig(const IOdictiona
     namePhiE_ = CEMdict.lookupOrDefault<word>("namePhiE", "phiE");
     DEBUG(adapterInfo("    potential field name : " + namePhiE_));
 
+    // Read the name of the current field (if different)
+    nameJ_ = CEMdict.lookupOrDefault<word>("nameJ", "J");
+    DEBUG(adapterInfo("    Current (J) field name : " + nameJ_));
+
     // Read the name of the u cross b field (if different)
     nameuxb_ = CEMdict.lookupOrDefault<word>("nameuxb", "UxB");
     DEBUG(adapterInfo("    u cross b field name : " + nameuxb_));
@@ -55,7 +59,7 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addWriters(std::string data
     {
         interface->addCouplingDataWriter(
             dataName,
-            new Current(mesh_, namePhiE_, nameuxb_));
+            new Current(mesh_, nameJ_, namePhiE_, nameuxb_)); //Arpan - remove namePhiE and nameuxb later
         DEBUG(adapterInfo("Added writer: Current."));
     }
     else
@@ -87,7 +91,7 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addReaders(std::string data
     {
         interface->addCouplingDataReader(
             dataName,
-            new Current(mesh_, namePhiE_, nameuxb_));
+            new Current(mesh_, nameJ_, namePhiE_, nameuxb_)); //Arpan - remove nameJ later
         DEBUG(adapterInfo("Added reader: Current."));
     }
     else

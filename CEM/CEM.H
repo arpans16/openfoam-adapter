@@ -25,6 +25,9 @@ protected:
     //- Name of the potential field
     std::string namePhiE_ = "phiE";
 
+    //- Name of the current field
+    std::string nameJ_ = "J";
+
     //- Name of the u cross b field
     std::string nameuxb_ = "UxB";
 

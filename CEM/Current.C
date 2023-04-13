@@ -1,7 +1,7 @@
 #include "Current.H"
 #include "primitivePatchInterpolation.H"
 
-//#include "fvCFD.H"
+#include "fvCFD.H"
 
 using namespace Foam;
 
@@ -9,10 +9,12 @@ using namespace Foam;
 
 preciceAdapter::CEM::Current::Current(
     const Foam::fvMesh& mesh,
+    const std::string nameJ,
     const std::string namePhiE,
     const std::string nameuxb)
-: phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
-  uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))), 
+: J_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameJ))), 
+  phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
+  uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))),
   mesh_(mesh)
 {
     dataType_ = scalar;
@@ -27,8 +29,8 @@ void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, 
     {
         int patchID = patchIDs_.at(j);
 
-        const scalarField gradientPatch((phiE_->boundaryField()[patchID]).snGrad());
-	const scalarField uxb_scalar(uxb_->boundaryField()[patchID].component(2)); // & patchIDs_[j].Sf());
+	const vectorField norm = mesh_.Sf().boundaryField()[patchID] / mesh_.magSf().boundaryField()[patchID];
+	const scalarField J_wn(J_->boundaryField()[patchID] & norm);
 
         // If we use the mesh connectivity, we interpolate from the centres to the nodes
         if (meshConnectivity)
@@ -37,27 +39,20 @@ void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, 
             primitivePatchInterpolation patchInterpolator(mesh_.boundaryMesh()[patchID]);
 
 	    //Interpolate on patches
-            scalarField gradientPoints = patchInterpolator.faceToPointInterpolate(gradientPatch);
-	    scalarField uxbPoints = patchInterpolator.faceToPointInterpolate(uxb_scalar);
+	    scalarField JPoints = patchInterpolator.faceToPointInterpolate(J_wn);
 
             // For every cell of the patch
-            forAll(gradientPoints, i)
+            forAll(JPoints, i)
             {
-                // Copy the heat flux into the buffer
-                // Q = - k * gradient(T)
-                //TODO: Interpolate kappa in case of a turbulent calculation
-                buffer[bufferIndex++] = - gradientPoints[i] + uxbPoints[i];
+                buffer[bufferIndex++] = JPoints[i];
             }
         }
         else
         {
             // For every cell of the patch
-            forAll(gradientPatch, i)
+            forAll(J_wn, i)
             {
-                // Copy the heat flux into the buffer
-                // Q = - k * gradient(T)
-                //TODO: Interpolate kappa in case of a turbulent calculation
-                buffer[bufferIndex++] = - gradientPatch[i] + uxb_scalar[i];
+                buffer[bufferIndex++] = J_wn[i];
             }
         }
     }
@@ -70,22 +65,19 @@ void preciceAdapter::CEM::Current::read(double* buffer, const unsigned int dim)
     // For every boundary patch of the interface
     for (uint j = 0; j < patchIDs_.size(); j++)
     {
+	double sigma = 400.0; //Arpan - read in this later
         int patchID = patchIDs_.at(j);
 
         // Get the potential gradient boundary patch
         scalarField& gradientPatch(refCast<fixedGradientFvPatchScalarField>(phiE_->boundaryFieldRef()[patchID]).gradient());
 
-        //scalarField& uxb_scalar(refCast<fvPatchField>(uxb_->boundaryField()[patchID].component(2)));
-        scalarField uxb_scalar(uxb_->boundaryField()[patchID].component(2));
+        vectorField norm = mesh_.Sf().boundaryField()[patchID] / mesh_.magSf().boundaryField()[patchID];
+        scalarField uxb_scalar(uxb_->boundaryField()[patchID] & norm);
 
         // For every cell of the patch
         forAll(gradientPatch, i)
         {
-            // Compute and assign the gradient from the buffer.
-            // The sign of the heat flux needs to be inversed,
-            // as the buffer contains the flux that enters the boundary:
-            // gradient(T) = -Q / -k
-            gradientPatch[i] = buffer[bufferIndex++] - uxb_scalar[i];
+            gradientPatch[i] = (buffer[bufferIndex++] - uxb_scalar[i]) / sigma;
         }
     }
 }
