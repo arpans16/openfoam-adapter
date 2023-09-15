@@ -1,0 +1,58 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      preciceDict;
+}
+
+preciceConfig "../precice-config.xml";
+
+participant Solid;
+
+modules (CEM);
+
+interfaces
+{
+  Interface1
+  {
+    mesh              Solid-Mesh-Centers;
+    locations         faceCenters;
+    connectivity      false;
+    patches           (top_int left_int bot_int right_int);
+    
+    readData
+    (
+    );
+    
+    writeData
+    (
+	Potential
+    );
+  };
+  
+  Interfaces2
+  {
+    mesh              Solid-Mesh-Nodes;
+    locations         faceNodes;
+    connectivity      true;
+    patches           (top_int left_int bot_int right_int);
+    
+    readData
+    (
+	Current
+    );
+    
+    writeData
+    (
+    );
+  };
+};
+
+CEM
+{
+   k   [ 1  1 -3 -1 0 0 0 ] 100;
+   solverType "basic";
+   nameJ JE;
+};

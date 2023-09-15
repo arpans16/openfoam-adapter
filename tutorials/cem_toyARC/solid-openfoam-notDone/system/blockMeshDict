@@ -1,0 +1,164 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+scale 1;
+
+vertices
+(
+//bot block
+    (0.0 0.0 0.0)
+    (2.2 0.0 0.0)
+    (2.2 0.1 0.0)
+    (0.0 0.1 0.0)
+
+    (0.0 0.0 20.0)
+    (2.2 0.0 20.0)
+    (2.2 0.1 20.0)
+    (0.0 0.1 20.0)
+
+//top block
+    (0.0 2.1 0.0)
+    (2.2 2.1 0.0)
+    (2.2 2.2 0.0)
+    (0.0 2.2 0.0)
+
+    (0.0 2.1 20.0)
+    (2.2 2.1 20.0)
+    (2.2 2.2 20.0)
+    (0.0 2.2 20.0)
+
+//left block
+    (0.1 0.1 0.0)
+    (0.1 2.1 0.0)
+
+    (0.1 0.1 20.0)
+    (0.1 2.1 20.0)
+
+//right block
+    (2.1 0.1 0.0)
+    (2.1 2.1 0.0)
+
+    (2.1 0.1 20.0)
+    (2.1 2.1 20.0)
+
+//prevent overlaps
+    (0.1 0.0 0.0)
+    (2.1 0.0 0.0)
+    (2.1 2.2 0.0)
+    (0.1 2.2 0.0)
+
+    (0.1 0.0 20.0)
+    (2.1 0.0 20.0)
+    (2.1 2.2 20.0)
+    (0.1 2.2 20.0)
+);
+
+blocks
+(
+    hex ( 0 24 16  3  4 28 18  7)	( 2 2 10) simpleGrading (1 1 1) //corner botleft
+    hex (25  1  2 20 29  5  6 22)       ( 2 2 10) simpleGrading (1 1 1) //corner botright
+    hex ( 8 17 27 11 12 19 31 15)       ( 2 2 10) simpleGrading (1 1 1) //corner topleft
+    hex (21  9 10 26 23 13 14 30)       ( 2 2 10) simpleGrading (1 1 1) //corner topright
+
+    hex (24 25 20 16 28 29 22 18)	(40 2 10) simpleGrading (1 1 1) //bot block
+    hex (17 21 26 27 19 23 30 31) 	(40 2 10) simpleGrading (1 1 1) //top block
+    hex ( 3 16 17  8  7 18 19 12) 	(2 40 10) simpleGrading (1 1 1) //left block
+    hex (20  2  9 21 22  6 13 23) 	(2 40 10) simpleGrading (1 1 1) //right block
+);
+
+boundary
+(
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            ( 0 24 16  3)
+	    (24 25 20 16)
+	    (25  1  2 20)
+	    ( 8 17 27 11)
+	    (17 21 26 27)
+	    (21 26  9 10)
+	    ( 3 16 17  8)	
+	    (20  2  9 21)	
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            ( 4 28 18  7)
+	    (28 29 22 18)
+	    (29  5  6 22)
+	    (12 19 31 15)
+	    (19 23 30 31)
+	    (23 13 14 30)
+	    ( 7 18 19 12)
+	    (22  6 13 23)
+        );
+    }
+
+    ext_walls
+    {
+        type wall;
+        faces
+        (
+	    ( 1 25 29  5)
+	    (25 24 28 29)
+	    (24  0 28  4)
+	    (10 26 30 14)
+	    (26 27 31 30)
+	    (27 11 15 31)
+	    ( 0  3  7  4)
+	    ( 3  8 12  7)
+	    ( 8 11 15 12)
+	    ( 1  2  6  5)
+	    ( 2  9 13  6)
+	    ( 9 10 14 13)
+        );
+    }
+
+    bot_int
+    {
+        type wall;
+        faces
+        (
+	    (20 16 18 22)
+        );
+    }
+
+    top_int
+    {
+        type wall;
+        faces
+        (
+            (21 17 19 23)
+        );
+    }
+
+    left_int
+    {
+        type wall;
+        faces
+        (
+	    (16 17 19 18)
+        );
+    }
+
+    right_int
+    {
+        type wall;
+        faces
+        (
+            (20 21 23 22)
+        );
+    }
+);

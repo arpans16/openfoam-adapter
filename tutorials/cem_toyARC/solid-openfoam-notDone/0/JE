@@ -1,0 +1,54 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      JE;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//dimensions      [0 -2 0 0 0 1 0];
+dimensions	  [1 1 -3 0 0 -1 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            calculated;
+	value		$internalField;
+    }
+    outlet
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    ext_walls
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    top_int
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    bot_int
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    left_int
+    {
+        type            calculated;
+        value           $internalField;
+    }
+    right_int
+    {
+        type            calculated;
+        value           $internalField;
+    }
+}
+
+// ************************************************************************* //

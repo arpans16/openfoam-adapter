@@ -1,0 +1,38 @@
+#!/bin/bash
+#SBATCH -A nsed
+#SBATCH -p batch
+#SBATCH -N 1
+#SBATCH -n 2
+#SBATCH -J cem
+#SBATCH --mem=100g
+#SBATCH -t 24:00:00
+#SBATCH -o log_cht
+#SBATCH -e err_cht
+#SBATCH --job-name=cht
+
+# Source environment file
+source /home/2as/bash_preCICE
+cd /home/2as/OFv1912/openfoam-adapter-Arpan/openfoam-adapter/tutorials/conducting-walls-flipped
+rm -r cem* log_* err_* job.pbs.* core.*
+
+cd ./solid-openfoam/
+rm logRun errRun
+#./clean.sh
+#./run.sh
+#mpirun -np 2 cemSolidHTFoam -parallel 1>logRun 2>errRun &
+cp ./system/controlDict_precice ./system/controlDict
+mpirun -n 1 cemSolidHTFoam 1>logRun 2>errRun &
+
+cd ../fluid-openfoam/
+rm logRun errRun
+#./clean.sh
+#./run.sh
+#mpirun -np 2 cemFFHTFoam -parallel 1>logRun 2>errRun &
+cp ./system/controlDict_precice ./system/controlDict
+mpirun -n 1 cemFFHTFoam 1>logRun 2>errRun &
+
+cd ../
+
+wait
+
+echo "DONE!"

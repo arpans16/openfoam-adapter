@@ -1,0 +1,132 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+scale 1;
+
+vertices
+(
+//bot block
+    (0.0 0.0 0.0)
+    (2.2 0.0 0.0)
+    (2.2 0.1 0.0)
+    (0.0 0.1 0.0)
+
+    (0.0 0.0 -20.0)
+    (2.2 0.0 -20.0)
+    (2.2 0.1 -20.0)
+    (0.0 0.1 -20.0)
+
+//top block
+    (0.0 2.1 0.0)
+    (2.2 2.1 0.0)
+    (2.2 2.2 0.0)
+    (0.0 2.2 0.0)
+
+    (0.0 2.1 -20.0)
+    (2.2 2.1 -20.0)
+    (2.2 2.2 -20.0)
+    (0.0 2.2 -20.0)
+
+//left block
+    (0.1 0.1 0.0)
+    (0.1 2.1 0.0)
+
+    (0.1 0.1 -20.0)
+    (0.1 2.1 -20.0)
+
+//right block
+    (2.1 0.1 0.0)
+    (2.1 2.1 0.0)
+
+    (2.1 0.1 -20.0)
+    (2.1 2.1 -20.0)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) 	(44 2 10) simpleGrading (1 1 1) //bot block
+    hex (8 9 10 11 12 13 14 15) (44 2 10) simpleGrading (1 1 1) //top block
+    hex (3 16 17 8 7 20 23 12) 	(2 44 10) simpleGrading (1 1 1) //left block
+    hex (18 2 9 19 21 6 13 22) 	(2 44 10) simpleGrading (1 1 1) //right block
+);
+
+boundary
+(
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            ( 0  1  2  3)
+	    ( 8  9 10 11)
+	    ( 3 16 17  8)	
+	    (18  2  9 19)	
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            ( 4  5  6  7)
+	    (12 13 14 15)
+	    ( 7 20 23 12)
+	    (21  6 13 22)
+        );
+    }
+
+    ext_walls
+    {
+        type wall;
+        faces
+        (
+	    ( 1  0  4  5) //bot wall	
+            (11 10 14 15) //top wall
+	    ( 3  8 12  7) //left wall
+	    ( 9  2  6 13) //right wall
+        );
+    }
+
+    bot_int
+    {
+        type wall;
+        faces
+        (
+            (16 18 21 20)
+        );
+    }
+
+    top_int
+    {
+        type wall;
+        faces
+        (
+            (19 17 23 22)
+        );
+    }
+
+    left_int
+    {
+        type wall;
+        faces
+        (
+            (17 16 20 23)
+        );
+    }
+
+    right_int
+    {
+        type wall;
+        faces
+        (
+            (18 19 21 22)
+        );
+    }
+);
