@@ -115,20 +115,6 @@ volVectorField UxB
     mesh
 );
 
-Info<< "Reading field T\n" << endl;
-volScalarField T
-(
-    IOobject
-    (
-        "T",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
 Info<< "Reading field JE\n" << endl;
 volVectorField JE
 (
@@ -158,20 +144,6 @@ volVectorField Lorentz
 );
 
 dimensionedScalar corrUnits("corrUnits", dimensionSet(0,4,-1,1,0,-2,0), scalar(1.0));
-
-Info<< "Reading field JouleHeating\n" << endl;
-volScalarField JouleHeating
-(
-    IOobject
-    (
-        "JouleHeating",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
 
 /*
 Info<< "Reading transportProperties\n" << endl;

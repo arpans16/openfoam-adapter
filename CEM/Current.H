@@ -16,14 +16,14 @@ class Current : public CouplingDataUser
 
 protected:
     //- Potential field
-    Foam::volVectorField* J_;
+    Foam::volVectorField* JE_;
     Foam::volScalarField* phiE_;
     Foam::volVectorField* uxb_;
     const Foam::fvMesh& mesh_;
 
 public:
     //- Constructor //Arpan - overload later
-    Current(const Foam::fvMesh& mesh, const std::string nameJ, const std::string namePhiE, const std::string nameuxb);
+    Current(const Foam::fvMesh& mesh, const std::string nameJE, const std::string namePhiE, const std::string nameuxb);
 
     //- Compute current values from the potential field
     //  and write them into the buffer

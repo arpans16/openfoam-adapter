@@ -5,8 +5,6 @@
 
 using namespace Foam;
 
-//----- preciceAdapter::CHT::HeatFlux -----------------------------------------
-
 preciceAdapter::CHT::HeatFlux::HeatFlux(
     const Foam::fvMesh& mesh,
     const std::string nameT)
@@ -34,7 +32,7 @@ void preciceAdapter::CHT::HeatFlux::write(double* buffer, bool meshConnectivity,
         // Extract the effective conductivity on the patch
         extractKappaEff(patchID, meshConnectivity);
 
-        // If we use the mesh connectivity, we interpolate from the centres to the nodes
+        //If we use the mesh connectivity, we interpolate from the centres to the nodes
         if (meshConnectivity)
         {
             //Setup Interpolation object

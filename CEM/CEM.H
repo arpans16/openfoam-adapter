@@ -26,7 +26,7 @@ protected:
     std::string namePhiE_ = "phiE";
 
     //- Name of the current field
-    std::string nameJ_ = "J";
+    std::string nameJE_ = "JE";
 
     //- Name of the u cross b field
     std::string nameuxb_ = "UxB";

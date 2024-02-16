@@ -9,10 +9,10 @@ using namespace Foam;
 
 preciceAdapter::CEM::Current::Current(
     const Foam::fvMesh& mesh,
-    const std::string nameJ,
+    const std::string nameJE,
     const std::string namePhiE,
     const std::string nameuxb)
-: J_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameJ))), 
+: JE_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameJE))), 
   phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
   uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))),
   mesh_(mesh)
@@ -30,7 +30,7 @@ void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, 
         int patchID = patchIDs_.at(j);
 
 	const vectorField norm = mesh_.Sf().boundaryField()[patchID] / mesh_.magSf().boundaryField()[patchID];
-	const scalarField J_wn(J_->boundaryField()[patchID] & norm);
+	const scalarField JE_wn(JE_->boundaryField()[patchID] & norm);
 
         // If we use the mesh connectivity, we interpolate from the centres to the nodes
         if (meshConnectivity)
@@ -39,20 +39,20 @@ void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, 
             primitivePatchInterpolation patchInterpolator(mesh_.boundaryMesh()[patchID]);
 
 	    //Interpolate on patches
-	    scalarField JPoints = patchInterpolator.faceToPointInterpolate(J_wn);
+	    scalarField JEPoints = patchInterpolator.faceToPointInterpolate(JE_wn);
 
             // For every cell of the patch
-            forAll(JPoints, i)
+            forAll(JEPoints, i)
             {
-                buffer[bufferIndex++] = JPoints[i];
+                buffer[bufferIndex++] = JEPoints[i];
             }
         }
         else
         {
             // For every cell of the patch
-            forAll(J_wn, i)
+            forAll(JE_wn, i)
             {
-                buffer[bufferIndex++] = J_wn[i];
+                buffer[bufferIndex++] = JE_wn[i];
             }
         }
     }

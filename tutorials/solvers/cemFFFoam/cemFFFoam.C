@@ -115,22 +115,6 @@ int main(int argc, char *argv[])
 		fvOptions.correct(U);
             }
 
-	    //--solving temperature transport--//
-	    JouleHeating = JE&JE * corrUnits;
-            fvScalarMatrix TEqn
-            (
-                fvm::ddt(T)
-              + fvm::div(phi, T)
-              - fvm::laplacian(DT, T)
-	      + JouleHeating
-             ==
-                fvOptions(T)
-            );
-            TEqn.relax();
-            fvOptions.constrain(TEqn);
-            TEqn.solve();
-            fvOptions.correct(T);
-
             //--PISO loop for pressure--//
             while (piso.correct())
             {

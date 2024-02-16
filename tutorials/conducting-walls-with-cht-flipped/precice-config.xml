@@ -11,11 +11,11 @@
     <data:scalar name="Potential" />
     <data:scalar name="Current" />
     <data:scalar name="Temperature" />
-    <data:scalar name="Heat-Flux" />
+    <data:scalar name="HeatFlux" />
 
     <mesh name="Fluid-Mesh-Centers">
       <use-data name="Current" />
-      <use-data name="Heat-Flux" />
+      <use-data name="HeatFlux" />
     </mesh>
 
     <mesh name="Fluid-Mesh-Nodes">
@@ -30,7 +30,7 @@
 
     <mesh name="Solid-Mesh-Nodes">
       <use-data name="Current" />
-      <use-data name="Heat-Flux" />
+      <use-data name="HeatFlux" />
     </mesh>
 
     <participant name="Fluid">
@@ -39,7 +39,7 @@
       <use-mesh name="Solid-Mesh-Centers" from="Solid" />
       <write-data name="Current" mesh="Fluid-Mesh-Centers" />
       <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
-      <write-data name="Heat-Flux" mesh="Fluid-Mesh-Centers" />
+      <write-data name="HeatFlux" mesh="Fluid-Mesh-Centers" />
       <read-data name="Temperature" mesh="Fluid-Mesh-Nodes" />
       <mapping:nearest-projection
         direction="read"
@@ -55,7 +55,7 @@
       <write-data name="Potential" mesh="Solid-Mesh-Centers" />
       <read-data name="Current" mesh="Solid-Mesh-Nodes" />
       <write-data name="Temperature" mesh="Solid-Mesh-Centers" />
-      <read-data name="Heat-Flux" mesh="Solid-Mesh-Nodes" />
+      <read-data name="HeatFlux" mesh="Solid-Mesh-Nodes" />
       <mapping:nearest-projection
         direction="read"
         from="Fluid-Mesh-Centers"
@@ -69,7 +69,7 @@
       <time-window-size value="0.01" />
       <max-time value="1" />
       <participants first="Solid" second="Fluid" />
-      <exchange data="Heat-Flux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="HeatFlux" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <exchange data="Temperature" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
       <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
@@ -78,7 +78,7 @@
       <relative-convergence-measure limit="1.0e-6" data="Temperature" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
         <data mesh="Fluid-Mesh-Centers" name="Current" />
-        <data mesh="Fluid-Mesh-Centers" name="Heat-Flux" />
+        <data mesh="Fluid-Mesh-Centers" name="HeatFlux" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="40" />
         <time-windows-reused value="10" />

@@ -1,0 +1,3 @@
+cemSolidFoam.C
+
+EXE = $(FOAM_APPBIN)/cemSolidFoam

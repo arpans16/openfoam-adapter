@@ -10,27 +10,23 @@ FoamFile
     version     2.0;
     format      ascii;
     arch        "LSB;label=32;scalar=64";
-    class       regIOobject;
-    location    "constant/polyMesh";
-    object      pointZones;
-    meta
-    {
-        names           2 ( intf_outer1intf_outer1m0CutPointZone intf_inner1intf_inner1m1CutPointZone );
-    }
+    class       volVectorField;
+    location    "0";
+    object      JE;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-2
-(intf_outer1intf_outer1m0CutPointZone
+dimensions      [0 -2 0 0 0 1 0];
+
+internalField	uniform (0 0 0);
+
+boundaryField
 {
-    type            pointZone;
-    pointLabels     List<label> 0();
+    "(inlet|outlet|top|bottom|right|left)"
+    {
+        type            extrapolatedCalculated;
+        value           uniform (0 0 0);
+    }
 }
-intf_inner1intf_inner1m1CutPointZone
-{
-    type            pointZone;
-    pointLabels     List<label> 0();
-}
-)
 
 // ************************************************************************* //
