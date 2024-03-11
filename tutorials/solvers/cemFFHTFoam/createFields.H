@@ -71,8 +71,6 @@ volVectorField U
 
 #include "createPhi.H"
 
-
-
 Info<< "Reading field B\n" << endl;
 volVectorField B
 (
@@ -96,6 +94,20 @@ volScalarField phiE
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+Info<< "Reading field phiEold\n" << endl;
+volScalarField phiEold
+(
+    IOobject
+    (
+        "phiEold",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
     mesh

@@ -23,28 +23,13 @@ interfaces
     
     readData
     (
-    );
-    
-    writeData
-    (
-	Current
-    );
-  };
-  
-  Interface2
-  {
-    mesh              Fluid-Mesh-Nodes;
-    locations         faceNodes;
-    connectivity      true;
-    patches           (intf_inner intf_inner1 intf_outer intf_outer1);
-    
-    readData
-    (
 	Potential
     );
     
     writeData
     (
+	//Current
+	CurrentRobin
     );
   };
 };

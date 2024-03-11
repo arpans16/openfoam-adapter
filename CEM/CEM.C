@@ -32,6 +32,8 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::readConfig(const IOdictiona
     // Read the name of the potential field (if different)
     namePhiE_ = CEMdict.lookupOrDefault<word>("namePhiE", "phiE");
     DEBUG(adapterInfo("    potential field name : " + namePhiE_));
+    namePhiEold_ = CEMdict.lookupOrDefault<word>("namePhiEold", "phiEold");
+    DEBUG(adapterInfo("    potential field name : " + namePhiEold_));
 
     // Read the name of the current field (if different)
     nameJE_ = CEMdict.lookupOrDefault<word>("nameJE", "JE");
@@ -61,6 +63,13 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addWriters(std::string data
             dataName,
             new Current(mesh_, nameJE_, namePhiE_, nameuxb_)); //Arpan - remove namePhiE and nameuxb later
         DEBUG(adapterInfo("Added writer: Current."));
+    }
+    else if (dataName.find("CurrentRobin") == 0)
+    {
+        interface->addCouplingDataWriter(
+            dataName,
+            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_));
+        DEBUG(adapterInfo("Added writer: CurrentRobin."));
     }
     else
     {
@@ -93,6 +102,13 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addReaders(std::string data
             dataName,
             new Current(mesh_, nameJE_, namePhiE_, nameuxb_)); //Arpan - remove nameJE later
         DEBUG(adapterInfo("Added reader: Current."));
+    }
+    else if (dataName.find("CurrentRobin") == 0)
+    {
+        interface->addCouplingDataReader(
+            dataName,
+            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_));
+        DEBUG(adapterInfo("Added reader: CurrentRobin."));
     }
     else
     {

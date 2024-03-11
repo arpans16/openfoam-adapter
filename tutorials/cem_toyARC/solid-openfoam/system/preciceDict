@@ -24,28 +24,13 @@ interfaces
     
     readData
     (
+	//Current
+	CurrentRobin
     );
     
     writeData
     (
 	Potential
-    );
-  };
-  
-  Interfaces2
-  {
-    mesh              Solid-Mesh-Nodes;
-    locations         faceNodes;
-    connectivity      true;
-    patches           (top_int left_int bot_int right_int);
-    
-    readData
-    (
-	Current
-    );
-    
-    writeData
-    (
     );
   };
 };

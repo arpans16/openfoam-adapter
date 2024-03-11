@@ -5,6 +5,7 @@
 
 #include "CEM/Potential.H"
 #include "CEM/Current.H"
+#include "CEM/CurrentRobin.H"
 
 #include "fvCFD.H"
 
@@ -24,6 +25,7 @@ protected:
 
     //- Name of the potential field
     std::string namePhiE_ = "phiE";
+    std::string namePhiEold_ = "phiEold";
 
     //- Name of the current field
     std::string nameJE_ = "JE";
@@ -32,7 +34,7 @@ protected:
     std::string nameuxb_ = "UxB";
 
 protected:
-    //- Read the CEM-related options from the adapter's configuraiton file
+    //- Read the CEM-related options from the adapter's configuration file
     bool readConfig(const IOdictionary& adapterConfig);
 
 public:

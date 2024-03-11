@@ -14,6 +14,7 @@ CHT/CHT.C
 
 CEM/Potential.C
 CEM/Current.C
+CEM/CurrentRobin.C
 
 CEM/CEM.C
 

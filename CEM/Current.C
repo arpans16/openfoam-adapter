@@ -77,7 +77,10 @@ void preciceAdapter::CEM::Current::read(double* buffer, const unsigned int dim)
         // For every cell of the patch
         forAll(gradientPatch, i)
         {
-            gradientPatch[i] = (buffer[bufferIndex++] - uxb_scalar[i]) / sigma;
+	    //Arpan changes March 08 2024
+
+	    //gradientPatch[i] 	= (buffer[bufferIndex++] - uxb_scalar[i]) / sigma;  	//orig Neumann - wrong
+            gradientPatch[i] 	= uxb_scalar[i] - buffer[bufferIndex++]/sigma;		//orig Neumann - correct
         }
     }
 }

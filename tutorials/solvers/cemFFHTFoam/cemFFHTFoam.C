@@ -82,10 +82,14 @@ int main(int argc, char *argv[])
 
     Info<< nl << "Starting time loop" << endl;
 
+    //Arpan added on March 11, 2024 for copyPhiE.H initialization
+    int count = 0;
+    double time1 = runTime.value();
+
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
-
+	#include "copyPhiE.H"
         #include "CourantNo.H"
 
         {

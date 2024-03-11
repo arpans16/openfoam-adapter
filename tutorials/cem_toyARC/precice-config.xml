@@ -9,62 +9,54 @@
 
   <solver-interface dimensions="3">
     <data:scalar name="Potential" />
-    <data:scalar name="Current" />
+    <data:scalar name="CurrentRobin" />
 
     <mesh name="Fluid-Mesh-Centers">
-      <use-data name="Current" />
-    </mesh>
-
-    <mesh name="Fluid-Mesh-Nodes">
+      <use-data name="CurrentRobin" />
       <use-data name="Potential" />
     </mesh>
 
     <mesh name="Solid-Mesh-Centers">
       <use-data name="Potential" />
-    </mesh>
-
-    <mesh name="Solid-Mesh-Nodes">
-      <use-data name="Current" />
+      <use-data name="CurrentRobin" />
     </mesh>
 
     <participant name="Fluid">
       <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
-      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" from="Solid" />
-      <write-data name="Current" mesh="Fluid-Mesh-Centers" />
-      <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
+      <write-data name="CurrentRobin" mesh="Fluid-Mesh-Centers" />
+      <read-data name="Potential" mesh="Fluid-Mesh-Centers" />
       <mapping:nearest-projection
         direction="read"
         from="Solid-Mesh-Centers"
-        to="Fluid-Mesh-Nodes"
+        to="Fluid-Mesh-Centers"
         constraint="consistent" />
     </participant>
 
     <participant name="Solid">
       <use-mesh name="Fluid-Mesh-Centers" from="Fluid" />
-      <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
       <use-mesh name="Solid-Mesh-Centers" provide="yes" />
       <write-data name="Potential" mesh="Solid-Mesh-Centers" />
-      <read-data name="Current" mesh="Solid-Mesh-Nodes" />
+      <read-data name="CurrentRobin" mesh="Solid-Mesh-Centers" />
       <mapping:nearest-projection
         direction="read"
         from="Fluid-Mesh-Centers"
-        to="Solid-Mesh-Nodes"
+        to="Solid-Mesh-Centers"
         constraint="consistent" />
     </participant>
 
     <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
 
     <coupling-scheme:serial-implicit>
-      <time-window-size value="0.001" />
+      <time-window-size value="0.00001" />
       <max-time value="1" />
       <participants first="Solid" second="Fluid" />
       <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
-      <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <exchange data="CurrentRobin" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
       <max-iterations value="50" />
       <relative-convergence-measure limit="1.0e-5" data="Potential" mesh="Solid-Mesh-Centers" />
       <acceleration:IQN-ILS>
-        <data mesh="Fluid-Mesh-Centers" name="Current" />
+        <data mesh="Fluid-Mesh-Centers" name="CurrentRobin" />
         <initial-relaxation value="0.01" />
         <max-used-iterations value="40" />
         <time-windows-reused value="10" />

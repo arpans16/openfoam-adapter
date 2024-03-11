@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<precice-configuration>
+  <log>
+    <sink
+      filter="%Severity% > debug and %Rank% = 0"
+      format="---[precice] %ColorizedSeverity% %Message%"
+      enabled="true" />
+  </log>
+
+  <solver-interface dimensions="3">
+    <data:scalar name="Potential" />
+    <data:scalar name="Current" />
+
+    <mesh name="Fluid-Mesh-Centers">
+      <use-data name="Current" />
+    </mesh>
+
+    <mesh name="Fluid-Mesh-Nodes">
+      <use-data name="Potential" />
+    </mesh>
+
+    <mesh name="Solid-Mesh-Centers">
+      <use-data name="Potential" />
+    </mesh>
+
+    <mesh name="Solid-Mesh-Nodes">
+      <use-data name="Current" />
+    </mesh>
+
+    <participant name="Fluid">
+      <use-mesh name="Fluid-Mesh-Centers" provide="yes" />
+      <use-mesh name="Fluid-Mesh-Nodes" provide="yes" />
+      <use-mesh name="Solid-Mesh-Centers" from="Solid" />
+      <write-data name="Current" mesh="Fluid-Mesh-Centers" />
+      <read-data name="Potential" mesh="Fluid-Mesh-Nodes" />
+      <mapping:nearest-projection
+        direction="read"
+        from="Solid-Mesh-Centers"
+        to="Fluid-Mesh-Nodes"
+        constraint="consistent" />
+    </participant>
+
+    <participant name="Solid">
+      <use-mesh name="Fluid-Mesh-Centers" from="Fluid" />
+      <use-mesh name="Solid-Mesh-Nodes" provide="yes" />
+      <use-mesh name="Solid-Mesh-Centers" provide="yes" />
+      <write-data name="Potential" mesh="Solid-Mesh-Centers" />
+      <read-data name="Current" mesh="Solid-Mesh-Nodes" />
+      <mapping:nearest-projection
+        direction="read"
+        from="Fluid-Mesh-Centers"
+        to="Solid-Mesh-Nodes"
+        constraint="consistent" />
+    </participant>
+
+    <m2n:sockets from="Fluid" to="Solid" exchange-directory=".." />
+
+    <coupling-scheme:serial-implicit>
+      <time-window-size value="0.001" />
+      <max-time value="1" />
+      <participants first="Solid" second="Fluid" />
+      <exchange data="Potential" mesh="Solid-Mesh-Centers" from="Solid" to="Fluid" />
+      <exchange data="Current" mesh="Fluid-Mesh-Centers" from="Fluid" to="Solid" />
+      <max-iterations value="50" />
+      <relative-convergence-measure limit="1.0e-5" data="Potential" mesh="Solid-Mesh-Centers" />
+      <acceleration:IQN-ILS>
+        <data mesh="Fluid-Mesh-Centers" name="Current" />
+        <initial-relaxation value="0.01" />
+        <max-used-iterations value="40" />
+        <time-windows-reused value="10" />
+        <filter type="QR1" limit="1e-6" />
+      </acceleration:IQN-ILS>
+    </coupling-scheme:serial-implicit>
+  </solver-interface>
+</precice-configuration>

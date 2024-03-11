@@ -33,6 +33,12 @@ boundaryField
     {
         type            fixedGradient; //Value;
 	gradient	uniform 0.1;
+/* mixedBC
+        type            mixed;
+        refValue        $internalField;
+        refGradient     uniform 0.1;
+        valueFraction   uniform 0.1;
+*/
     }
 }
 
