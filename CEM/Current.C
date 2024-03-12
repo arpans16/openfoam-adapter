@@ -1,6 +1,5 @@
 #include "Current.H"
 #include "primitivePatchInterpolation.H"
-
 #include "fvCFD.H"
 
 using namespace Foam;
@@ -11,10 +10,12 @@ preciceAdapter::CEM::Current::Current(
     const Foam::fvMesh& mesh,
     const std::string nameJE,
     const std::string namePhiE,
-    const std::string nameuxb)
+    const std::string nameuxb,
+    const std::string nameSigma)
 : JE_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameJE))), 
   phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
   uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))),
+  sigma_(new getSigma(mesh, nameSigma)),
   mesh_(mesh)
 {
     dataType_ = scalar;
@@ -61,11 +62,12 @@ void preciceAdapter::CEM::Current::write(double* buffer, bool meshConnectivity, 
 void preciceAdapter::CEM::Current::read(double* buffer, const unsigned int dim)
 {
     int bufferIndex = 0;
+    extractSigma();
 
     // For every boundary patch of the interface
     for (uint j = 0; j < patchIDs_.size(); j++)
     {
-	double sigma = 400.0; //Arpan - read in this later
+	//double sigma = 400.0; //Arpan - read in this later - done now March 12 2024
         int patchID = patchIDs_.at(j);
 
         // Get the potential gradient boundary patch
@@ -79,8 +81,8 @@ void preciceAdapter::CEM::Current::read(double* buffer, const unsigned int dim)
         {
 	    //Arpan changes March 08 2024
 
-	    //gradientPatch[i] 	= (buffer[bufferIndex++] - uxb_scalar[i]) / sigma;  	//orig Neumann - wrong
-            gradientPatch[i] 	= uxb_scalar[i] - buffer[bufferIndex++]/sigma;		//orig Neumann - correct
+	    //gradientPatch[i] 	= (buffer[bufferIndex++] - uxb_scalar[i]) / sigma;  		//orig Neumann - wrong
+            gradientPatch[i] 	= - uxb_scalar[i] + buffer[bufferIndex++]/getSigmaValue();	//orig Neumann - correct
         }
     }
 }
@@ -105,4 +107,15 @@ bool preciceAdapter::CEM::Current::isLocationTypeSupported(const bool meshConnec
 std::string preciceAdapter::CEM::Current::getDataName() const
 {
     return "Current";
+}
+
+
+void preciceAdapter::CEM::Current::extractSigma()
+{
+    sigma_->extract();
+}
+
+scalar preciceAdapter::CEM::Current::getSigmaValue()
+{
+    return sigma_->getValue();
 }

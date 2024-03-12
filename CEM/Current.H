@@ -2,7 +2,7 @@
 #define CEM_CURRENT_H
 
 #include "CouplingDataUser.H"
-
+#include "getSigma.H"
 #include "fvCFD.H"
 
 namespace preciceAdapter
@@ -20,10 +20,23 @@ protected:
     Foam::volScalarField* phiE_;
     Foam::volVectorField* uxb_;
     const Foam::fvMesh& mesh_;
+	
+    getSigma* sigma_;
+
+    //- Wrapper for the extract() method of the corresponding getSigma class
+    virtual void extractSigma();
+
+    //- Wrapper for the getSigmaValue() method of the corresponding getSigma class
+    virtual Foam::scalar getSigmaValue();
 
 public:
     //- Constructor //Arpan - overload later
-    Current(const Foam::fvMesh& mesh, const std::string nameJE, const std::string namePhiE, const std::string nameuxb);
+    Current(
+	const Foam::fvMesh& mesh,
+	const std::string nameJE,
+	const std::string namePhiE,
+	const std::string nameuxb,
+	const std::string nameSigma);
 
     //- Compute current values from the potential field
     //  and write them into the buffer

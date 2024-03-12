@@ -23,6 +23,9 @@ protected:
 
     // TODO: Create a struct for all the parameter names
 
+    //- Name of the electrical conductivity for a basic solver
+    std::string nameSigma_ = "sigma";
+
     //- Name of the potential field
     std::string namePhiE_ = "phiE";
     std::string namePhiEold_ = "phiEold";

@@ -26,10 +26,17 @@ dimensionedScalar nu
     transportProperties
 );
 
+dimensionedScalar cp
+(
+    "cp",
+    dimensionSet(0,2,-2,-1,0,0,0),
+    transportProperties
+);
+
 dimensionedScalar mu
 (
     "mu",
-    dimensionSet(1, 1, -2, 0, 0, -2, 0),
+    dimensionSet(1, -1, -1, 0, 0, 0, 0),
     transportProperties
 );
 
@@ -169,7 +176,7 @@ volVectorField Lorentz
     mesh
 );
 
-dimensionedScalar corrUnits("corrUnits", dimensionSet(0,4,-1,1,0,-2,0), scalar(1.0));
+//dimensionedScalar corrUnits("corrUnits", dimensionSet(0,4,-1,1,0,-2,0), scalar(1.0));
 
 Info<< "Reading field JouleHeating\n" << endl;
 volScalarField JouleHeating

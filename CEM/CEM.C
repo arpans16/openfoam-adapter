@@ -1,5 +1,4 @@
 #include "CEM.H"
-
 #include "Utilities.H"
 
 using namespace Foam;
@@ -28,6 +27,10 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::configure(const IOdictionar
 bool preciceAdapter::CEM::ConjugateElectroMagnetics::readConfig(const IOdictionary& adapterConfig)
 {
     const dictionary& CEMdict = adapterConfig.subOrEmptyDict("CEM");
+
+    // Read the name of the electrical conductivity parameter (if different)
+    nameSigma_ = CEMdict.lookupOrDefault<word>("nameSigma", "sigma");
+    DEBUG(adapterInfo("    electrical conductivity name : " + nameSigma_));
 
     // Read the name of the potential field (if different)
     namePhiE_ = CEMdict.lookupOrDefault<word>("namePhiE", "phiE");
@@ -61,16 +64,18 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addWriters(std::string data
     {
         interface->addCouplingDataWriter(
             dataName,
-            new Current(mesh_, nameJE_, namePhiE_, nameuxb_)); //Arpan - remove namePhiE and nameuxb later
+            new Current(mesh_, nameJE_, namePhiE_, nameuxb_, nameSigma_)); //Arpan - remove namePhiE and nameuxb later
         DEBUG(adapterInfo("Added writer: Current."));
     }
     else if (dataName.find("CurrentRobin") == 0)
     {
         interface->addCouplingDataWriter(
             dataName,
-            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_));
+            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_, nameSigma_));
         DEBUG(adapterInfo("Added writer: CurrentRobin."));
     }
+    // Arpan - add another else if here if you want to pass the electrical conductivity at the interface
+    // this makes sense to do when we are dealing with variable conductivities
     else
     {
         found = false;
@@ -100,14 +105,14 @@ bool preciceAdapter::CEM::ConjugateElectroMagnetics::addReaders(std::string data
     {
         interface->addCouplingDataReader(
             dataName,
-            new Current(mesh_, nameJE_, namePhiE_, nameuxb_)); //Arpan - remove nameJE later
+            new Current(mesh_, nameJE_, namePhiE_, nameuxb_, nameSigma_)); //Arpan - remove nameJE later
         DEBUG(adapterInfo("Added reader: Current."));
     }
     else if (dataName.find("CurrentRobin") == 0)
     {
         interface->addCouplingDataReader(
             dataName,
-            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_));
+            new CurrentRobin(mesh_, nameJE_, namePhiE_, namePhiEold_, nameuxb_, nameSigma_));
         DEBUG(adapterInfo("Added reader: CurrentRobin."));
     }
     else

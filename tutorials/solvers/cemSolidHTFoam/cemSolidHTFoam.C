@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
         while (simple.correctNonOrthogonal())
         {
-	    volScalarField JouleHeating = JE&JE * corrUnits;
+	    volScalarField JouleHeating = (JE&JE)/(sigma*cp*rho);
             fvScalarMatrix TEqn
             (
                 fvm::ddt(T) - fvm::laplacian(DT, T) 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         //solve(fvm::laplacian(phiE));
         phiE.correctBoundaryConditions();
 
-	JE = -fvc::grad(phiE);
+	JE = -sigma * fvc::grad(phiE);
 
         runTime.write();
         runTime.printExecutionTime(Info);

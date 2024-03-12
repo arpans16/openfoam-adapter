@@ -25,8 +25,7 @@ bool preciceAdapter::CHT::ConjugateHeatTransfer::configure(const IOdictionary& a
     // specify in the configuration, add it here. See also the methods
     // addWriters() and addReaders().
     // Check the solver type and determine it if needed
-    if (
-        solverType_.compare("compressible") == 0 || solverType_.compare("incompressible") == 0 || solverType_.compare("basic") == 0)
+    if (solverType_.compare("compressible") == 0 || solverType_.compare("incompressible") == 0 || solverType_.compare("basic") == 0)
     {
         DEBUG(adapterInfo("Known solver type: " + solverType_));
     }

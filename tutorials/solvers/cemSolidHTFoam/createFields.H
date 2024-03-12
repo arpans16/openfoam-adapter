@@ -1,6 +1,5 @@
 
     Info<< "Reading physicalProperties\n" << endl;
-
     IOdictionary physicalProperties
     (
         IOobject
@@ -12,6 +11,40 @@
             IOobject::NO_WRITE
         )
     );
+
+Info<< "Reading transportProperties\n" << endl;
+IOdictionary transportProperties
+(
+    IOobject
+    (
+        "transportProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+dimensionedScalar rho
+(
+    "rho",
+    dimensionSet(1,-3,0,0,0,0,0),
+    transportProperties
+);
+
+dimensionedScalar cp
+(
+    "cp",
+    dimensionSet(0,2,-2,-1,0,0,0),
+    transportProperties
+);
+
+dimensionedScalar sigma
+(
+    "sigma",
+    dimensionSet(-1, -3, 3, 0, 0, 2, 0),
+    transportProperties
+);
 
     Info<< "Reading field phiE\n" << endl;
     volScalarField phiE
@@ -86,7 +119,7 @@ volScalarField DT
     dimensionedScalar(dimViscosity, Zero)
 );
 
-dimensionedScalar corrUnits("corrUnits", dimensionSet(-2,-2,5,1,0,2,0), scalar(1.0));
+//dimensionedScalar corrUnits("corrUnits", dimensionSet(-2,-2,5,1,0,2,0), scalar(1.0));
 
 Info<< "Reading field JouleHeating\n" << endl;
 volScalarField JouleHeating

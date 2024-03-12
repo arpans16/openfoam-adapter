@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	    phiE.correctBoundaryConditions();
 	    volVectorField gradPhiE = fvc::grad(phiE);
 	    JE = sigma*(- gradPhiE + UxB);
-	    Lorentz = JE ^ B;
+	    Lorentz = (JE ^ B)/rho;
 
 	    //--solving momentum equation--//
             fvVectorMatrix UEqn
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
                 fvm::ddt(U)
               + fvm::div(phi, U)
               - fvm::laplacian(nu, U)
-	      - Lorentz/rho
+	      - Lorentz
 	      ==
 	        fvOptions(U)
             );
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
             }
 
 	    //--solving temperature transport--//
-	    JouleHeating = JE&JE * corrUnits;
+	    JouleHeating = (JE&JE)/(sigma*cp*rho);
             fvScalarMatrix TEqn
             (
                 fvm::ddt(T)

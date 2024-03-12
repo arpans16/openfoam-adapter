@@ -18,7 +18,7 @@ stopAt          endTime;
 
 endTime         1;
 
-deltaT          1e-5; //0.001;
+deltaT          5e-6; //0.001;
 
 writeControl    runTime;
 

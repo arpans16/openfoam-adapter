@@ -12,11 +12,13 @@ preciceAdapter::CEM::CurrentRobin::CurrentRobin(
     const std::string nameJE,
     const std::string namePhiE,
     const std::string namePhiEold,
-    const std::string nameuxb)
+    const std::string nameuxb,
+    const std::string nameSigma)
 : JE_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameJE))), 
   phiE_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiE))),
   phiEold_(const_cast<volScalarField*>(&mesh.lookupObject<volScalarField>(namePhiEold))),
   uxb_(const_cast<volVectorField*>(&mesh.lookupObject<volVectorField>(nameuxb))),
+  sigma_(new getSigma(mesh, nameSigma)),
   mesh_(mesh)
 {
     dataType_ = scalar;
@@ -63,11 +65,11 @@ void preciceAdapter::CEM::CurrentRobin::write(double* buffer, bool meshConnectiv
 void preciceAdapter::CEM::CurrentRobin::read(double* buffer, const unsigned int dim)
 {
     int bufferIndex = 0;
+    extractSigma();
 
     // For every boundary patch of the interface
     for (uint j = 0; j < patchIDs_.size(); j++)
     {
-	double sigma = 400.0; //Arpan - read in this later
         int patchID = patchIDs_.at(j);
 
         // Get the potential gradient boundary patch
@@ -83,11 +85,12 @@ void preciceAdapter::CEM::CurrentRobin::read(double* buffer, const unsigned int 
         {
 	    //Arpan changes March 08 2024
 	    //new Robin - attempt
-	    double fluxin 	= uxb_scalar[i] - buffer[bufferIndex++]/sigma;
-	    double alpha 	= 0.2*(delCoef[i]*2); //phiE_->boundaryField()[patchID].deltaCoeffs()[i];
+	    double fluxin 	= uxb_scalar[i] - buffer[bufferIndex++]/getSigmaValue();
+	    // divide by 2.0 since delCoef is inverse of distance from cell center to patch center - we need cell height
+	    double alpha 	= (delCoef[i]/2.0)*getSigmaValue();
 	    double phi_new	= phiE_->boundaryFieldRef()[patchID][i];
 	    double phi_old	= phiEold_->boundaryFieldRef()[patchID][i];
-	    gradientPatch[i] 	= alpha * (phi_new - phi_old) + fluxin;
+	    gradientPatch[i] 	= alpha * (phi_new - phi_old) - fluxin; //fluxin is -ve since that's the flux leaving the other domain
         }
     }
 }
@@ -112,4 +115,21 @@ bool preciceAdapter::CEM::CurrentRobin::isLocationTypeSupported(const bool meshC
 std::string preciceAdapter::CEM::CurrentRobin::getDataName() const
 {
     return "CurrentRobin";
+}
+
+/*
+preciceAdapter::CEM::CurrentRobin::~CurrentRobin()
+{
+    delete sigma_;
+}
+*/
+
+void preciceAdapter::CEM::CurrentRobin::extractSigma()
+{
+    sigma_->extract();
+}
+
+scalar preciceAdapter::CEM::CurrentRobin::getSigmaValue()
+{
+    return sigma_->getValue();
 }
